@@ -36,6 +36,7 @@ KVReconNucTrajectory::KVReconNucTrajectory(const KVGeoDNTrajectory* tr, const KV
    KVGeoDetectorNode* _n;
    while ((_n = tr->GetNextNode())) {
       AddLast(_n);
+      fDetLabels[_n->GetDetector()->GetLabel()] = _n->GetDetector();
    }
    // add all ID telescopes from parent trajectory which contain only
    // detectors on this trajectory

@@ -60,6 +60,7 @@ KVSilicon::KVSilicon(Float_t thick): KVINDRADetector("Si", thick * KVUnits::um)
    // constructor for silicon detector, thickness in microns
    // Type of detector: "SI"
    SetType("SI");
+   SetLabel("SI");//for use with KVReconNucTrajectory
    init();
 }
 

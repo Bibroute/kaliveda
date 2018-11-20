@@ -2884,7 +2884,7 @@ void KVMultiDetArray::RecursiveTrajectoryClustering(KVGeoDetectorNode* N, KVUniq
 {
    if (N->GetNTraj() > 1) {
       if (!multitraj_nodes.FindObject(N)) { // look for any detectors which are on multiple trajectories
-         cout << "multitraj node found: " << N->GetName() << " (" << N->GetNTraj() << ")" << endl;
+         //cout << "multitraj node found: " << N->GetName() << " (" << N->GetNTraj() << ")" << endl;
          multitraj_nodes.Add(N);
          TIter tr(N->GetTrajectories());
          KVGeoDNTrajectory* traj;
