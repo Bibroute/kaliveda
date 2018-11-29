@@ -25,6 +25,7 @@ INDRAFAZIA.T18_02.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
 +Plugin.KVDetector:      ^INDRAFAZIA.T18_02.SI$      KVSilicon_GG_Energy      KVIndrageometry      "KVSilicon_GG_Energy(Float_t)"
 
 INDRAFAZIA.T18_02.FAZIA.NBlocks: 2
+INDRAFAZIA.T18_02.FAZIA.BlockPositions: 5,9
 
 +Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
 +Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"

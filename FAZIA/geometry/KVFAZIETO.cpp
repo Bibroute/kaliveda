@@ -44,6 +44,18 @@ void KVFAZIETO::GetGeometryParameters()
 
 void KVFAZIETO::BuildFAZIA()
 {
+   // Number of blocks in demonstrator, their numbers, and positions can be modified for
+   // different datasets using the following environment variables:
+   //
+   // [dataset].FAZIA.NBlocks:  3
+   // [dataset].FAZIA.BlockNumbers: 0,1,4
+   // [dataset].FAZIA.BlockPositions: 11,9,5
+   //
+   // This will build a 3 block demonstrator with blocks numbered 0, 1, and 4
+   // which will be placed at the given block positions in the standard
+   // 12-block geometry (where blocks are numbered clockwise starting from
+   // the innermost block placed at roughly 12 o'clock)
+
    Info("BuildFAZIA", "Compact geometry, %f cm from target",
         fFDist);
 
@@ -67,28 +79,30 @@ void KVFAZIETO::BuildFAZIA()
    Double_t dx = (block->GetTotalSideWithBlindage()) / 2.;
 
    TVector3 centre;
-   // WARNING
-   //  VERY DIRTY! Juste pour avoir 3 blocs 0, 1, et 4 (?!?!?)
-   Int_t block_number[] = {0, 1, 4, 2, 3, 5, 6, 7, 8, 9, 10, 11};
+   // block numbering and positions
+   KVNumberList block_numbers = KVBase::GetDataSetEnv(fDataSet, "FAZIA.BlockNumbers", "0,1,2,3,4,5,6,7,8,9,10,11");
+   block_numbers.Begin();
+   KVNumberList block_positions = KVBase::GetDataSetEnv(fDataSet, "FAZIA.BlockPositions", "0,1,2,3,4,5,6,7,8,9,10,11");
+   block_positions.Begin();
+
    for (Int_t i = 0; i < fNblocks; i += 1) {
 
-      Int_t bb = block_number[i];
+      Int_t block_number = block_numbers.Next();
+      Int_t bb = block_positions.Next();
 
       //for FAZIASYM ordering
       if (bb == 3)      centre.SetXYZ(-1 * (dx     - centre_hole / 2), 1 * (-dx    - centre_hole / 2),  distance_block_cible);
       else if (bb == 2) centre.SetXYZ(-1 * (dx     + centre_hole / 2), 1 * (dx     - centre_hole / 2),  distance_block_cible);
-      else if (bb == 9) centre.SetXYZ(-1 * (-dx    + centre_hole / 2), 1 * (dx     + centre_hole / 2),  distance_block_cible);
-      else if (bb == 5) centre.SetXYZ(-1 * (-dx    - centre_hole / 2), 1 * (-dx    + centre_hole / 2),  distance_block_cible);
-
+      else if (bb == 1) centre.SetXYZ(-1 * (-dx    + centre_hole / 2), 1 * (dx     + centre_hole / 2),  distance_block_cible);
+      else if (bb == 0) centre.SetXYZ(-1 * (-dx    - centre_hole / 2), 1 * (-dx    + centre_hole / 2),  distance_block_cible);
       else if (bb == 10) centre.SetXYZ(-1 * (3 * dx   - centre_hole / 2),  1 * (-dx   - centre_hole / 2),  distance_block_cible);
-      else if (bb == 0) centre.SetXYZ(-1 * (dx     - centre_hole / 2),  1 * (-3 * dx - centre_hole / 2),  distance_block_cible);
-      else if (bb == 1) centre.SetXYZ(-1 * (3 * dx   + centre_hole / 2),  1 * (dx    - centre_hole / 2),  distance_block_cible);
+      else if (bb == 11) centre.SetXYZ(-1 * (dx     - centre_hole / 2),  1 * (-3 * dx - centre_hole / 2),  distance_block_cible);
+      else if (bb == 9) centre.SetXYZ(-1 * (3 * dx   + centre_hole / 2),  1 * (dx    - centre_hole / 2),  distance_block_cible);
       else if (bb == 8) centre.SetXYZ(-1 * (dx     + centre_hole / 2),  1 * (3 * dx  - centre_hole / 2),  distance_block_cible);
-
       else if (bb == 7) centre.SetXYZ(-1 * (-dx    + centre_hole / 2),  1 * (3 * dx  + centre_hole / 2),  distance_block_cible);
       else if (bb == 6) centre.SetXYZ(-1 * (-3 * dx  + centre_hole / 2),  1 * (dx    + centre_hole / 2),  distance_block_cible);
-      else if (bb == 4)centre.SetXYZ(-1 * (-3 * dx  - centre_hole / 2), 1 * (-dx    + centre_hole / 2),  distance_block_cible);
-      else if (bb == 11)centre.SetXYZ(-1 * (-dx    - centre_hole / 2),  1 * (-3 * dx + centre_hole / 2),  distance_block_cible);
+      else if (bb == 5)centre.SetXYZ(-1 * (-3 * dx  - centre_hole / 2), 1 * (-dx    + centre_hole / 2),  distance_block_cible);
+      else if (bb == 4)centre.SetXYZ(-1 * (-dx    - centre_hole / 2),  1 * (-3 * dx + centre_hole / 2),  distance_block_cible);
 
 
       else {
@@ -96,13 +110,13 @@ void KVFAZIETO::BuildFAZIA()
       }
       theta = centre.Theta() * TMath::RadToDeg();
       phi = centre.Phi() * TMath::RadToDeg();
-      printf("BLK #%d => theta=%1.2lf - phi=%1.2lf\n", bb, theta, phi);
+      printf("BLK #%d => theta=%1.2lf - phi=%1.2lf\n", block_number, theta, phi);
 
       rot2.SetAngles(phi + 90., theta, 0.);
       rot1.SetAngles(-1.*phi, 0., 0.);
       h = rot2 * trans * rot1;
       ph = new TGeoHMatrix(h);
-      top->AddNode(block, bb, ph);
+      top->AddNode(block, block_number, ph);
    }
 
 }
