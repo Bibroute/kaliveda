@@ -390,7 +390,8 @@ void KVDetector::Print(Option_t* opt) const
       if (BelongsToUnidentifiedParticle())
          cout << "(Belongs to an unidentified particle)";
       cout << endl;
-   } else if (!strcmp(opt, "all")) {
+   }
+   else if (!strcmp(opt, "all")) {
       //Give full details of detector
       //
       TString option("    ");
@@ -424,7 +425,8 @@ void KVDetector::Print(Option_t* opt) const
          cout << option << " --- Identification Telescopes used to identify particles stopping in this detector:" << endl;
          fIDTele4Ident->ls();
       }
-   } else {
+   }
+   else {
       //just print name
       cout << ClassName() << ": " << ((KVDetector*) this)->
            GetName() << endl;
@@ -794,7 +796,8 @@ Int_t KVDetector::FindZmin(Double_t ELOSS, Char_t mass_formula)
          zmin = z;
          z += (UInt_t)((zmax - z) / 2 + 0.5);
 
-      } else {
+      }
+      else {
 
          zmax = z;
          last_positive_difference_z = z;
@@ -869,13 +872,15 @@ Double_t KVDetector::RangeDet(Double_t* x, Double_t* par)
             range += this_range;
          // calculate incident energy for next layer (i.e. residual energy after this layer)
          Einc = mat->GetERes(Z, A, Einc);
-      } else {
+      }
+      else {
          // particle stops in layer
          range += this_range;
          return range;
       }
       mat = next_mat;
-   } while (mat);
+   }
+   while (mat);
    // particle traverses detector
    return range;
 }
@@ -923,29 +928,19 @@ KVDetector* KVDetector::MakeDetector(const Char_t* name, Float_t thickness)
    //'thickness' is passed as argument to the constructor for the detector plugin
 
    //check and load plugin library
-   TPluginHandler* ph = NULL;
+   TPluginHandler* ph = nullptr;
    KVString nom(name);
-   if (!nom.Contains(".") && !(ph = LoadPlugin("KVDetector", name))) return 0;
+   if (!nom.Contains(".") && !(ph = LoadPlugin("KVDetector", name))) return nullptr;
    if (nom.Contains(".")) {
-      TObjArray* toks = nom.Tokenize(".");
-      Int_t nt = toks->GetEntries();
-      if (nt == 2) {
-         if (!(ph = LoadPlugin("KVDetector", name))) {
-            if (!(ph = LoadPlugin("KVDetector", ((TObjString*)(*toks)[1])->GetString().Data()))) {
-               delete toks;
-               return 0;
-            }
+      // name format like [dataset].[det_type]
+      // in case dataset name contains "." we parse string to find detector type: assumed after the last "."
+      nom.RBegin(".");
+      KVString det_type = nom.RNext();
+      if (!(ph = LoadPlugin("KVDetector", name))) {
+         if (!(ph = LoadPlugin("KVDetector", det_type))) {
+            return nullptr;
          }
-      } else if (nt == 1) {
-         if (!(ph = LoadPlugin("KVDetector", ((TObjString*)(*toks)[0])->GetString().Data()))) {
-            delete toks;
-            return 0;
-         }
-      } else {
-         delete toks;
-         return 0;
       }
-      delete toks;
    }
 
    //execute constructor/macro for detector
@@ -987,7 +982,8 @@ void KVDetector::GetVerticesInOwnFrame(TVector3* corners, Double_t depth, Double
    if (fTelescope) {
       fTelescope->GetCornerCoordinatesInOwnFrame(corners, depth);
       fTelescope->GetCornerCoordinatesInOwnFrame(&corners[4], dist_to_back);
-   } else {
+   }
+   else {
       GetCornerCoordinatesInOwnFrame(corners, depth);
       GetCornerCoordinatesInOwnFrame(&corners[4], dist_to_back);
    }
@@ -1060,7 +1056,8 @@ TGeoVolume* KVDetector::GetGeoVolume()
          Double_t trans_z = -tot_thick_det / 2. + depth_in_det + dz; // (note: reference is CENTRE of absorber)
          TGeoTranslation* tr = new TGeoTranslation(0., 0., trans_z);
          mother_vol->AddNode(vol, 1, tr);
-      } else {
+      }
+      else {
          // single absorber: mother is absorber is detector is mother is ...
          mother_vol = vol;
       }
@@ -1441,11 +1438,13 @@ void KVDetector::ReadDefinitionFromFile(const Char_t* envrc)
          thick = (Double_t)gROOT->ProcessLineFast(Form("%s*1.e+12", tS.Data()));
          thick /= 1.e+12;
          M = new KVMaterial(mat.Data(), thick, press);
-      } else if (tS != "") {
+      }
+      else if (tS != "") {
          thick = (Double_t)gROOT->ProcessLineFast(Form("%s*1.e+12", tS.Data()));
          thick /= 1.e+12;
          M = new KVMaterial(mat.Data(), thick);
-      } else if (dS != "") {
+      }
+      else if (dS != "") {
          dens = (Double_t)gROOT->ProcessLineFast(Form("%s*1.e+12", dS.Data()));
          dens /= 1.e+12;
          M = new KVMaterial(dens, mat.Data());
@@ -1587,7 +1586,8 @@ KVGeoStrucElement* KVDetector::GetParentStructure(const Char_t* type, const Char
       KVSeqCollection* strucs = fParentStrucList.GetSubListWithType(type);
       el = (KVGeoStrucElement*)strucs->FindObject(name);
       delete strucs;
-   } else
+   }
+   else
       el = (KVGeoStrucElement*)fParentStrucList.FindObjectByType(type);
    return el;
 }
@@ -1693,10 +1693,12 @@ void KVDetector::SetThickness(Double_t thick)
       // bad kludge - is there no better way to clone a shape and change its dZ?
       if (shape->IsA() == TGeoBBox::Class()) {
          newshape = new TGeoBBox(shape->GetDX(), shape->GetDY(), 0.5 * thick);
-      } else if (shape->IsA() == TGeoTube::Class()) {
+      }
+      else if (shape->IsA() == TGeoTube::Class()) {
          TGeoTube* oldtube = static_cast<TGeoTube*>(shape);
          newshape = new TGeoTube(oldtube->GetRmin(), oldtube->GetRmax(), 0.5 * thick);
-      } else {
+      }
+      else {
          Error("SetThickness", "No implementation for %s (%s)", shape->IsA()->GetName(), GetName());
       }
       if (newshape) {
