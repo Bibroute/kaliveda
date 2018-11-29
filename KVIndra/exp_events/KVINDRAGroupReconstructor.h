@@ -40,7 +40,7 @@ protected:
    void CheckCsIEnergy(KVReconstructedNucleus* n);
    KVCsI* GetCsI(KVReconstructedNucleus* n)
    {
-      return (KVCsI*)(n->GetStoppingDetector()->IsType("CSI") ? n->GetStoppingDetector() : nullptr);
+      return (KVCsI*)n->GetReconstructionTrajectory()->GetDetector("CSI");
    }
 
    void CalculateChIoDEFromResidualEnergy(KVReconstructedNucleus* n, Double_t ERES);

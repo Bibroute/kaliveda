@@ -13,6 +13,10 @@ protected:
    Bool_t CoherencyChIoSiCsI(KVReconstructedNucleus& PART);
    Bool_t CoherencySiCsI(KVReconstructedNucleus& PART);
    Bool_t CalculateSiliconDEFromResidualEnergy(KVReconstructedNucleus* n, KVSilicon* si);
+   KVSilicon* GetSi(KVReconstructedNucleus* n)
+   {
+      return (KVSilicon*)n->GetReconstructionTrajectory()->GetDetector("SI");
+   }
 public:
    KVINDRAForwardGroupReconstructor() {}
    virtual ~KVINDRAForwardGroupReconstructor() {}

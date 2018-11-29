@@ -21,7 +21,7 @@ $Id: KVChIo.cpp,v 1.55 2008/02/21 10:14:38 franklan Exp $
 
 #define MAX_CANAL_GG 4000
 
-ClassImp(KVChIo);
+ClassImp(KVChIo)
 //_______________________________________________________________________
 //KVChIo
 //
@@ -72,6 +72,7 @@ KVChIo::KVChIo(Float_t pressure, Float_t thick): KVINDRADetector("Myl", 2.5 * KV
    AddAbsorber(mat);
 
    SetType("CI");
+   SetLabel("CI");
    init();
 }
 
@@ -297,7 +298,8 @@ Double_t KVChIo::GetVolts()
 
    if (fChVoltPG && fChVoltPG->GetStatus()) {
       return GetVoltsFromCanalPG();
-   } else if (fChVoltGG && fChVoltGG->GetStatus()) {
+   }
+   else if (fChVoltGG && fChVoltGG->GetStatus()) {
       return GetVoltsFromCanalGG(GetGGfromPG());
    }
 
@@ -338,7 +340,8 @@ void KVChIo::Streamer(TBuffer& R__b)
       fVoltE = (KVVoltEnergy*) GetCalibrator("Volt-Energy");
       fChVoltPG  = (KVChannelVolt*) GetCalibrator("Channel-Volt PG");
       fChVoltGG  = (KVChannelVolt*) GetCalibrator("Channel-Volt GG");
-   } else {
+   }
+   else {
       KVChIo::Class()->WriteBuffer(R__b, this);
    }
 }

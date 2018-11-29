@@ -36,7 +36,7 @@ using namespace std;
 ClassImp(KVCsI);
 //_______________________________________________________________________________________
 //
-//Child class of KVDetector, specifically describing the
+//Child class of KVINDRADetector, specifically describing the
 //CsI(Tl) scintillation detectors of the INDRA multidetector array.
 //
 //Type of detector: "CSI"
@@ -85,6 +85,7 @@ KVCsI::KVCsI(Float_t thick, Float_t thickAl): KVINDRADetector("CsI", thick)
       SetActiveLayer((KVMaterial*)fAbsorbers->FindObject("CsI"));
    }
    SetType("CSI");
+   SetLabel("CSI");//for use with KVReconNucTrajectory
    init();
 }
 
@@ -95,7 +96,8 @@ void KVCsI::SetAlThickness(Float_t thickAl /* um */)
       mat = new KVMaterial("Al", thickAl * KVUnits::um);
       fAbsorbers->AddFirst(mat);
       SetActiveLayer((KVMaterial*)fAbsorbers->FindObject("CsI"));
-   } else mat->SetThickness(thickAl * KVUnits::um);
+   }
+   else mat->SetThickness(thickAl * KVUnits::um);
 }
 
 //____________________________________________________________________________________________
@@ -133,7 +135,8 @@ Double_t KVCsI::GetLumiereTotale(Double_t rapide, Double_t lente)
             aa = nunuc->GetA();
          }
          return GetLightFromEnergy(zz, aa, GetEnergy());
-      } else {
+      }
+      else {
          return -1;
       }
       /*
@@ -248,7 +251,8 @@ Double_t KVCsI::Calculate(UShort_t mode, Double_t rapide, Double_t lente)
 
    if (ring > 3) {
       c2 = 2.2;
-   } else {
+   }
+   else {
       c2 = 3.3;
    }
    Double_t dx;
@@ -260,7 +264,8 @@ Double_t KVCsI::Calculate(UShort_t mode, Double_t rapide, Double_t lente)
       x3 = TMath::Exp(-tau2 / x);
       bx = x2 - x3;
       fLumTotStatus = NO_GAIN_CORRECTION;
-   } else {
+   }
+   else {
       //iterative calculation of total light output
       fLumTotStatus = CALCULATED_WITH_GAIN_CORRECTION;
       x = p0 + p1 * rp;
@@ -285,7 +290,8 @@ Double_t KVCsI::Calculate(UShort_t mode, Double_t rapide, Double_t lente)
          Double_t fpx = (bpx * ax - apx * bx) / (ax * ax);
          dx = -fx / fpx;
          x = x + dx;
-      } while (TMath::Abs(dx / x) >= eps && niter <= 50);
+      }
+      while (TMath::Abs(dx / x) >= eps && niter <= 50);
 
       if (niter > 50 || x <= tau) {
          fLumTotStatus = CALCULATION_NOT_CONVERGED;
@@ -363,7 +369,8 @@ void KVCsI::Print(Option_t* option) const
       if (BelongsToUnidentifiedParticle())
          cout << "(Belongs to an unidentified particle)";
       cout << endl;
-   } else {
+   }
+   else {
       KVDetector::Print(option);
    }
 }
@@ -426,7 +433,8 @@ void KVCsI::Streamer(TBuffer& R__b)
             }
          }
       }
-   } else {
+   }
+   else {
       KVCsI::Class()->WriteBuffer(R__b, this);
    }
 }
@@ -464,10 +472,12 @@ Double_t KVCsI::GetCorrectedEnergy(KVNucleus* nuc, Double_t lum, Bool_t)
          if (lum < 0.) return -1.;
          //force "OK" status for light
          fLumTotStatus = NO_GAIN_CORRECTION;
-      } else if (lum < 0.) {
+      }
+      else if (lum < 0.) {
          //light not given - calculate from R and L components
          lum = GetCorrectedLumiereTotale(); // include gain correction
-      } else {
+      }
+      else {
          //light given as argument - force "OK" status for light
          fLumTotStatus = NO_GAIN_CORRECTION;
       }
@@ -601,7 +611,8 @@ void KVCsI::DeduceACQParameters(KVEvent* e, KVNumberList& index)
             Yrap1 = idline->Eval(Xlen1, 0, "S");
             lumcalc1 = Calculate(kLumiere, Yrap1, Xlen1);
             //cout << "Extrapolating before start of ID line" << endl;
-         } else if (lumiere > lumcalc2) {
+         }
+         else if (lumiere > lumcalc2) {
             Xlen1 = Xlen2;
             Yrap1 = Yrap2;
             lumcalc1 = lumcalc2;
@@ -622,7 +633,8 @@ void KVCsI::DeduceACQParameters(KVEvent* e, KVNumberList& index)
          while (niter < 20 && TMath::Abs(lumcalc - lumiere) / lumiere > 0.01) {
             if (lumcalc > lumiere) {
                Xlen2 = Xlen;
-            } else {
+            }
+            else {
                Xlen1 = Xlen;
             }
             Xlen = (Xlen1 + Xlen2) / 2.;
@@ -638,12 +650,14 @@ void KVCsI::DeduceACQParameters(KVEvent* e, KVNumberList& index)
          //        if(idgcsi->IsDrawn()) idgcsi->IsDrawn()->cd();
          //        else {new TCanvas; idgcsi->Draw();}
          //        mrk->Draw();
-      } else {
+      }
+      else {
          KVIDCutLine* imf_line = (KVIDCutLine*)idgcsi->GetCut("IMF_line");
          if (!imf_line) {
             //Warning("DeduceACQParameters","%s, No IMF_line defined",GetName());
             return;
-         } else {
+         }
+         else {
             Double_t  Yrap1, Yrap2, Xlen1, Xlen2;
             imf_line->GetStartPoint(Xlen1, Yrap1);
             imf_line->GetEndPoint(Xlen2, Yrap2);
@@ -659,7 +673,8 @@ void KVCsI::DeduceACQParameters(KVEvent* e, KVNumberList& index)
                Yrap1 = imf_line->Eval(Xlen1, 0, "S") + 10.;
                lumcalc1 = Calculate(kLumiere, Yrap1, Xlen1);
                //cout << "Extrapolating before start of IMF line" << endl;
-            } else if (lumiere > lumcalc2) {
+            }
+            else if (lumiere > lumcalc2) {
                Xlen1 = Xlen2;
                Yrap1 = Yrap2;
                lumcalc1 = lumcalc2;
@@ -680,7 +695,8 @@ void KVCsI::DeduceACQParameters(KVEvent* e, KVNumberList& index)
             while (niter < 20 && TMath::Abs(lumcalc - lumiere) / lumiere > 0.01) {
                if (lumcalc > lumiere) {
                   Xlen2 = Xlen;
-               } else {
+               }
+               else {
                   Xlen1 = Xlen;
                }
                Xlen = (Xlen1 + Xlen2) / 2.;

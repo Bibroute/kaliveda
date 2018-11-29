@@ -112,9 +112,7 @@ void KVINDRAForwardGroupReconstructor::DoCalibration(KVReconstructedNucleus* PAR
          return;
       }
    }
-   KVSilicon* si = nullptr;
-   if (csi) si = (KVSilicon*)(csi->GetNode()->GetDetectorsInFront() ? csi->GetNode()->GetDetectorsInFront()->First() : nullptr);
-   else if (PART->GetStoppingDetector()->IsType("SI")) si = (KVSilicon*)PART->GetStoppingDetector();
+   KVSilicon* si = GetSi(PART);
    if (si) {
       /* SILICIUM ENERGY CONTRIBUTION */
       // if fPileup = kTRUE, the Silicon energy appears to include a contribution from another particle
@@ -198,17 +196,14 @@ void KVINDRAForwardGroupReconstructor::DoNeutronCalibration(KVReconstructedNucle
    // to calculate the energy deposited by the neutron
    KVIdentificationResult* IDcsi = PART->GetIdentificationResult(1);
    KVNucleus tmp(IDcsi->Z, IDcsi->A);
-   if (PART->GetStoppingDetector()->IsType("CSI")) {
-      KVCsI* csi = (KVCsI*)PART->GetStoppingDetector();
-      if (csi && csi->IsCalibrated()) {
-         fECsI = csi->GetCorrectedEnergy(&tmp, -1., kFALSE);
-         PART->SetEnergy(fECsI);
-         SETINDRAECODE(PART, 2); // not a real energy measure
-      }
+   KVCsI* csi = GetCsI(PART);
+   if (csi && csi->IsCalibrated()) {
+      fECsI = csi->GetCorrectedEnergy(&tmp, -1., kFALSE);
+      PART->SetEnergy(fECsI);
+      SETINDRAECODE(PART, 2); // not a real energy measure
    }
-   else {
+   else
       SetNoCalibrationStatus(PART);
-   }
 }
 
 //____________________________________________________________________________________________
