@@ -1,50 +1,46 @@
 # fichier d initialisation pour la lecture des dataset INDRAFAZIA
 #
-+DataSet:	  INDRAFAZIA
-INDRAFAZIA.DataSet.Title:    INDRA-FAZIA Campaign (2018-)
-INDRAFAZIA.DataSet.RepositoryDir:	t18_02
-INDRAFAZIA.DataSet.RunFileName.raw:    run_%04d.dat%*
-INDRAFAZIA.DataSet.RunFile.DoNotDelete: raw
-INDRAFAZIA.DataSet.RunFileClass.raw:    MFM
-INDRAFAZIA.ReconstructedEventClassName:	KVReconstructedEvent
-INDRAFAZIA.KVDataSet.DataType.Subdir.recon:  recon
-INDRAFAZIA.KVDataSet.DataType.Subdir.root:  root
-INDRAFAZIA.DataSet.ExpSetUp.ClassList: KVFAZIA KVINDRA
-#INDRAFAZIA.HasCalibIdentInfos:   yes
-#INDRAFAZIA.ActiveIdentifications:      CSI SI-CSI CI-SI CI-CSI Si-Si Si-CsI Si CsI
-INDRAFAZIA.ActiveIdentifications:      SI-CSI CSI Si-Si Si-CsI CsI
-INDRAFAZIA.SI-CSI.MassID: yes
-INDRAFAZIA.SI-CSI.MassID.Validity:  Z<=8
-#INDRAFAZIA.EventReconstruction.DoCalibration: no
-INDRAFAZIA.ReconIdent.DataAnalysisTask.Prereq:     xxx
-INDRAFAZIA.IdentRoot.DataAnalysisTask.Prereq:     xxx
-INDRAFAZIA.ReconRoot.DataAnalysisTask.Prereq:     xxx
-INDRAFAZIA.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
++DataSet:	  INDRAFAZIA.T18_02
+INDRAFAZIA.T18_02.DataSet.Title:    Test 18_02 (June/July 2018)
+INDRAFAZIA.T18_02.DataSet.RepositoryDir:	t18_02
+INDRAFAZIA.T18_02.DataSet.RunFileName.raw:    run_%04d.dat%*
+INDRAFAZIA.T18_02.DataSet.RunFile.DoNotDelete: raw
+INDRAFAZIA.T18_02.DataSet.RunFileClass.raw:    MFM
+INDRAFAZIA.T18_02.ReconstructedEventClassName:	KVReconstructedEvent
+INDRAFAZIA.T18_02.KVDataSet.DataType.Subdir.recon:  recon
+INDRAFAZIA.T18_02.KVDataSet.DataType.Subdir.root:  root
+INDRAFAZIA.T18_02.DataSet.ExpSetUp.ClassList: KVFAZIA KVINDRA
+INDRAFAZIA.T18_02.ActiveIdentifications:      SI-CSI CSI Si-Si Si-CsI CsI
+#INDRAFAZIA.T18_02.EventReconstruction.DoCalibration: no
+INDRAFAZIA.T18_02.ReconIdent.DataAnalysisTask.Prereq:     xxx
+INDRAFAZIA.T18_02.IdentRoot.DataAnalysisTask.Prereq:     xxx
+INDRAFAZIA.T18_02.ReconRoot.DataAnalysisTask.Prereq:     xxx
+INDRAFAZIA.T18_02.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
 
-+Plugin.KVMultiDetArray:    INDRAFAZIA    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
-+Plugin.KVExpDB:   INDRAFAZIA    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
-+Plugin.KVFAZIA:    INDRAFAZIA    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
-+Plugin.KVINDRA:    INDRAFAZIA    KVINDRA    KVIndraexp_events    "KVINDRA()"
++Plugin.KVMultiDetArray:    INDRAFAZIA.T18_02    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
++Plugin.KVExpDB:   INDRAFAZIA.T18_02    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
++Plugin.KVFAZIA:    INDRAFAZIA.T18_02    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
++Plugin.KVINDRA:    INDRAFAZIA.T18_02    KVINDRA    KVIndraexp_events    "KVINDRA()"
 
-+Plugin.KVDetector:      ^INDRAFAZIA.SI$      KVSilicon_GG_Energy      KVIndrageometry      "KVSilicon_GG_Energy(Float_t)"
++Plugin.KVDetector:      ^INDRAFAZIA.T18_02.SI$      KVSilicon_GG_Energy      KVIndrageometry      "KVSilicon_GG_Energy(Float_t)"
 
-INDRAFAZIA.FAZIA.NBlocks: 3
+INDRAFAZIA.T18_02.FAZIA.NBlocks: 2
 
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
++Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
++Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
++Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
++Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
 
-INDRAFAZIA.IdentificationParameterFile.SI-CSI:       INDRA_SICSI.dat
-INDRAFAZIA.IdentificationParameterFile.CSI:          INDRA_CSI.dat
-INDRAFAZIA.IdentificationParameterFile.Si-Si:        FAZIA_SiSi.dat
-INDRAFAZIA.IdentificationParameterFile.Si-CsI:       FAZIA_SiCsI.dat
-INDRAFAZIA.IdentificationParameterFile.CsI:          FAZIA_CsI.dat
+INDRAFAZIA.T18_02.IdentificationParameterFile.SI-CSI:       INDRA_SICSI.dat
+INDRAFAZIA.T18_02.IdentificationParameterFile.CSI:          INDRA_CSI.dat
+INDRAFAZIA.T18_02.IdentificationParameterFile.Si-Si:        FAZIA_SiSi.dat
+INDRAFAZIA.T18_02.IdentificationParameterFile.Si-CsI:       FAZIA_SiCsI.dat
+INDRAFAZIA.T18_02.IdentificationParameterFile.CsI:          FAZIA_CsI.dat
 
 FAZIADetector.Calib.Channel-Energy: pol2
 
-INDRAFAZIA.Q3.FastShaperFlatTop:    0.5
-INDRAFAZIA.Q3.ShaperFlatTop:        10.
-INDRAFAZIA.Q3.BaseLineLength:       100
-INDRAFAZIA.Q3.FastShaperRiseTime:   .5
-INDRAFAZIA.Q3.ShaperRiseTime:       .5
+INDRAFAZIA.T18_02.Q3.FastShaperFlatTop:    0.5
+INDRAFAZIA.T18_02.Q3.ShaperFlatTop:        10.
+INDRAFAZIA.T18_02.Q3.BaseLineLength:       100
+INDRAFAZIA.T18_02.Q3.FastShaperRiseTime:   .5
+INDRAFAZIA.T18_02.Q3.ShaperRiseTime:       .5
