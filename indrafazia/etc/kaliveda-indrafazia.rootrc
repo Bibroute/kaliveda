@@ -28,7 +28,7 @@ INDRAFAZIA.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
 
 +Plugin.KVDetector:      ^INDRAFAZIA.SI$      KVSilicon_GG_Energy      KVIndrageometry      "KVSilicon_GG_Energy(Float_t)"
 
-INDRAFAZIA.FAZIA.NBlocks: 2
+INDRAFAZIA.FAZIA.NBlocks: 3
 
 +Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
 +Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"

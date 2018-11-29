@@ -67,7 +67,12 @@ void KVFAZIETO::BuildFAZIA()
    Double_t dx = (block->GetTotalSideWithBlindage()) / 2.;
 
    TVector3 centre;
-   for (Int_t bb = 0; bb < fNblocks; bb += 1) {
+   // WARNING
+   //  VERY DIRTY! Juste pour avoir 3 blocs 0, 1, et 4 (?!?!?)
+   Int_t block_number[] = {0, 1, 4, 2, 3, 5, 6, 7, 8, 9, 10, 11};
+   for (Int_t i = 0; i < fNblocks; i += 1) {
+
+      Int_t bb = block_number[i];
 
       //for FAZIASYM ordering
       if (bb == 3)      centre.SetXYZ(-1 * (dx     - centre_hole / 2), 1 * (-dx    - centre_hole / 2),  distance_block_cible);
@@ -76,14 +81,14 @@ void KVFAZIETO::BuildFAZIA()
       else if (bb == 5) centre.SetXYZ(-1 * (-dx    - centre_hole / 2), 1 * (-dx    + centre_hole / 2),  distance_block_cible);
 
       else if (bb == 10) centre.SetXYZ(-1 * (3 * dx   - centre_hole / 2),  1 * (-dx   - centre_hole / 2),  distance_block_cible);
-      else if (bb == 11) centre.SetXYZ(-1 * (dx     - centre_hole / 2),  1 * (-3 * dx - centre_hole / 2),  distance_block_cible);
+      else if (bb == 0) centre.SetXYZ(-1 * (dx     - centre_hole / 2),  1 * (-3 * dx - centre_hole / 2),  distance_block_cible);
       else if (bb == 1) centre.SetXYZ(-1 * (3 * dx   + centre_hole / 2),  1 * (dx    - centre_hole / 2),  distance_block_cible);
       else if (bb == 8) centre.SetXYZ(-1 * (dx     + centre_hole / 2),  1 * (3 * dx  - centre_hole / 2),  distance_block_cible);
 
       else if (bb == 7) centre.SetXYZ(-1 * (-dx    + centre_hole / 2),  1 * (3 * dx  + centre_hole / 2),  distance_block_cible);
       else if (bb == 6) centre.SetXYZ(-1 * (-3 * dx  + centre_hole / 2),  1 * (dx    + centre_hole / 2),  distance_block_cible);
-      else if (bb == 0)centre.SetXYZ(-1 * (-3 * dx  - centre_hole / 2), 1 * (-dx    + centre_hole / 2),  distance_block_cible);
-      else if (bb == 4)centre.SetXYZ(-1 * (-dx    - centre_hole / 2),  1 * (-3 * dx + centre_hole / 2),  distance_block_cible);
+      else if (bb == 4)centre.SetXYZ(-1 * (-3 * dx  - centre_hole / 2), 1 * (-dx    + centre_hole / 2),  distance_block_cible);
+      else if (bb == 11)centre.SetXYZ(-1 * (-dx    - centre_hole / 2),  1 * (-3 * dx + centre_hole / 2),  distance_block_cible);
 
 
       else {
