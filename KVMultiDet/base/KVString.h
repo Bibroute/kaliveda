@@ -82,9 +82,11 @@ public:
    virtual Int_t Sscanf(const Char_t* fmt, ...);
 
    virtual Bool_t Match(TString pattern);
-   virtual void Begin(TString delim) const;
-   virtual Bool_t End() const;
-   virtual KVString Next(Bool_t strip_whitespace = kFALSE) const;
+   void Begin(TString delim) const;
+   Bool_t End() const;
+   KVString Next(Bool_t strip_whitespace = kFALSE) const;
+   void RBegin(TString delim) const;
+   KVString RNext(Bool_t strip_whitespace = kFALSE) const;
    virtual Int_t GetNValues(TString delim);
    std::vector<KVString> Vectorize(TString delim, Bool_t strip_whitespace = kFALSE);
 

@@ -343,13 +343,15 @@ Int_t KVString::Sscanf(const Char_t* fmt, ...)
                      // number is not correct length, string is not good
                      va_end(args);
                      return 0;
-                  } else {
+                  }
+                  else {
                      // good
                      *(va_arg(args, int*)) = dummy.Atoi();
                      fmt_index++;
                      read_items++;
                   }
-               } else {
+               }
+               else {
                   // fixed length integer with white-space padding
                   // i.e. for %3d, '3' will be represented by '  3'
                   // we must read int_format_length_descriptor consecutive characters
@@ -396,7 +398,8 @@ Int_t KVString::Sscanf(const Char_t* fmt, ...)
                   read_items++;
 
                }
-            } else {
+            }
+            else {
                // any length of integer i.e. '%d'
                while (cp[str_index] >= '0' && cp[str_index] <= '9')
                   dummy += cp[str_index++];
@@ -404,12 +407,14 @@ Int_t KVString::Sscanf(const Char_t* fmt, ...)
                fmt_index++;
                read_items++;
             }
-         } else if (fmt[fmt_index] == '*') {
+         }
+         else if (fmt[fmt_index] == '*') {
             //rest of string is garbage
             va_end(args);
             return read_items;
          }
-      } else {
+      }
+      else {
          //check character in format against string
          if (fmt[fmt_index] != cp[str_index]) {
             va_end(args);
@@ -463,7 +468,8 @@ Bool_t KVString::Match(TString pattern)
          if (idx != -1) {
             num += 1;
             idx++;
-         } else break;
+         }
+         else break;
       }
       if (num == n_tok) return kTRUE;
       else return kFALSE;
@@ -503,7 +509,8 @@ void KVString::Begin(TString delim) const
    if (IsNull()) {
       fEndList = kTRUE;
       kObjArr.reset(nullptr);
-   } else {
+   }
+   else {
       kObjArr.reset(Tokenize(delim));
       if (!kObjArr->GetEntries()) {
          fEndList = kTRUE;
@@ -565,6 +572,87 @@ KVString KVString::Next(Bool_t strip_whitespace) const
    if (!kObjArr.get()) return st;
    st = ((TObjString*)kObjArr->At(fIterIndex++))->GetString();
    fEndList = (fIterIndex == kObjArr->GetEntries());
+   if (fEndList) kObjArr.reset(nullptr);
+   if (strip_whitespace) st.Remove(kBoth, ' ');
+   return st;
+}
+
+void KVString::RBegin(TString delim) const
+{
+   // RBegin(), RNext() and End() can be used to loop BACKWARDS over items in
+   // a string separated by the delimiter character given as argument
+   // to RBegin().
+   //
+   // Example:
+   //   KVString str("First | Second | Third");
+   //   str.RBegin("|");
+   //   while( !str.End() ){
+   //     cout << str.RNext().Data() << endl;
+   //   }
+   //
+   // This will give the following output:
+   //
+   //  Third
+   //  Second
+   // First
+   //
+   // WARNING: If the delimiter character is not contained in the string,
+   // calling RNext() will return the entire contents of the string, after
+   // which End() will return kTRUE. This allows to parse strings containing
+   // variable numbers of parameters separated by a delimiter which is only
+   // used with 2 or more parameters, i.e.:
+   //
+   //      "par1|par2|par3" -> "par3" "par2" "par1"
+   //      "par1"           -> "par1"
+
+   fEndList = kFALSE;
+   fIterIndex = 0;
+   if (IsNull()) {
+      fEndList = kTRUE;
+      kObjArr.reset(nullptr);
+   }
+   else {
+      kObjArr.reset(Tokenize(delim));
+      if (!kObjArr->GetEntries()) {
+         fEndList = kTRUE;
+         kObjArr.reset(nullptr);
+      }
+      fIterIndex = kObjArr->GetEntries() - 1;
+   }
+}
+
+KVString KVString::RNext(Bool_t strip_whitespace) const
+{
+   // RBegin(), RNext() and End() can be used to loop BACKWARDS over items in
+   // a string separated by the delimiter character given as argument
+   // to RBegin().
+   // If strip_whitespace=kTRUE (default is kFALSE), any leading or
+   // trailing whitespace is removed from each item.
+   //
+   // Example:
+   //   KVString str("First | Second | Third");
+   //   str.RBegin("|");
+   //   while( !str.End() ){
+   //     cout << str.RNext(kTRUE).Data() << endl;
+   //   }
+   //
+   // This will give the following output:
+   //
+   // Third
+   // Second
+   // First
+   //
+   // whereas if RNext() is used (i.e. strip_whitespace=kFALSE),
+   // this gives:
+   //
+   //  Third
+   //  Second
+   // First
+
+   KVString st;
+   if (!kObjArr.get()) return st;
+   st = ((TObjString*)kObjArr->At(fIterIndex--))->GetString();
+   fEndList = (fIterIndex == -1);
    if (fEndList) kObjArr.reset(nullptr);
    if (strip_whitespace) st.Remove(kBoth, ' ');
    return st;
@@ -702,7 +790,8 @@ KVString KVString::Itoa(Int_t value, Int_t base)
    do {
       buf += "0123456789abcdefghijklmnopqrstuvwxyz"[ TMath::Abs(quotient % base) ];
       quotient /= base;
-   } while (quotient);
+   }
+   while (quotient);
    // Append the negative sign
    if (value < 0) buf += '-';
    std::reverse(buf.begin(), buf.end());
@@ -733,7 +822,8 @@ KVString KVString::UItoa(UInt_t value, Int_t base)
    do {
       buf += "0123456789abcdefghijklmnopqrstuvwxyz"[ quotient % base ];
       quotient /= base;
-   } while (quotient);
+   }
+   while (quotient);
    std::reverse(buf.begin(), buf.end());
    return (KVString(buf.data()));
 #else
@@ -762,7 +852,8 @@ KVString KVString::LLtoa(Long64_t value, Int_t base)
    do {
       buf += "0123456789abcdefghijklmnopqrstuvwxyz"[ TMath::Abs(quotient % base) ];
       quotient /= base;
-   } while (quotient);
+   }
+   while (quotient);
    // Append the negative sign
    if (value < 0) buf += '-';
    std::reverse(buf.begin(), buf.end());
@@ -793,7 +884,8 @@ KVString KVString::ULLtoa(ULong64_t value, Int_t base)
    do {
       buf += "0123456789abcdefghijklmnopqrstuvwxyz"[ quotient % base ];
       quotient /= base;
-   } while (quotient);
+   }
+   while (quotient);
    std::reverse(buf.begin(), buf.end());
    return (KVString(buf.data()));
 #else
@@ -835,7 +927,8 @@ KVString KVString::BaseConvert(const KVString& s_in, Int_t base_in, Int_t base_o
       // string comparison (s_in_>s_max) does not take care of length
       Error("KVString::BaseConvert", "s_in=\"%s\" > %s = 2^64-1 in base %d.", s_in.Data(), s_max.Data(), base_in);
       return (s_out);
-   } else if (s_in_.Length() == s_max.Length()) {
+   }
+   else if (s_in_.Length() == s_max.Length()) {
       // if ( s_in_.Length() < s_max.Length() ) everything's fine
       s_in_.ToLower();  // s_max is lower case
       if (s_in_ > s_max) {
@@ -929,7 +1022,8 @@ KVString& KVString::FindCommonCharacters(const TCollection* list, const char bug
       if (do_bug) {
          if (tmp[i] == bug) continue;
          else do_bug = false;
-      } else if (tmp[i] == bug) {
+      }
+      else if (tmp[i] == bug) {
          do_bug = true;
       }
       Append(tmp[i]);
@@ -982,7 +1076,8 @@ KVString& KVString::FindCommonTitleCharacters(const TCollection* list, const cha
       if (do_bug) {
          if (tmp[i] == bug) continue;
          else do_bug = false;
-      } else if (tmp[i] == bug) {
+      }
+      else if (tmp[i] == bug) {
          do_bug = true;
       }
       Append(tmp[i]);
@@ -1060,32 +1155,40 @@ KVString::KVString(Double_t value, Double_t error): TString(""), kObjArr(nullptr
       if (!((TString)Format("%1.2g", err)).Contains(".")) {
          if (y_exp == ey_exp) s = Format("%1.2g.0(%g.0).10$^{%d}$", y_dec, ey_dec, y_exp);
          else s = Format("%1.3g.0(%g.0).10$^{%d}$", y_dec, err, y_exp);
-      } else if (((TString)Format("%1.2g", err)) == ((TString)Format("%1.1g", err)) && ((TString)Format("%1.2g", err)).Contains(".")) {
+      }
+      else if (((TString)Format("%1.2g", err)) == ((TString)Format("%1.1g", err)) && ((TString)Format("%1.2g", err)).Contains(".")) {
          if (y_exp == ey_exp) s = Format("%1.2g.0(%g0).10$^{%d}$", y_dec, ey_dec, y_exp);
          else s = Format("%1.3g.0(%g0).10$^{%d}$", y_dec, err, y_exp);
-      } else {
+      }
+      else {
          if (y_exp == ey_exp) s = Format("%1.2g.0(%g).10$^{%d}$", y_dec, ey_dec, y_exp);
          else s = Format("%1.3g.0(%g).10$^{%d}$", y_dec, err, y_exp);
       }
-   } else if (((TString)Format("%1.3g", y_dec)) == ((TString)Format("%1.2g", y_dec)) && ((TString)Format("%1.2g", y_dec)).Contains(".") && err < 1) {
+   }
+   else if (((TString)Format("%1.3g", y_dec)) == ((TString)Format("%1.2g", y_dec)) && ((TString)Format("%1.2g", y_dec)).Contains(".") && err < 1) {
 
       if (!((TString)Format("%1.2g", err)).Contains(".")) {
          if (y_exp == ey_exp) s = Format("%1.2g0(%g.0).10$^{%d}$", y_dec, ey_dec, y_exp);
          else s = Format("%1.3g0(%g.0).10$^{%d}$", y_dec, err, y_exp);
-      } else if (((TString)Format("%1.2g", err)) == ((TString)Format("%1.1g", err)) && ((TString)Format("%1.2g", err)).Contains(".")) {
+      }
+      else if (((TString)Format("%1.2g", err)) == ((TString)Format("%1.1g", err)) && ((TString)Format("%1.2g", err)).Contains(".")) {
          if (y_exp == ey_exp) s = Format("%1.2g0(%g0).10$^{%d}$", y_dec, ey_dec, y_exp);
          else s = Format("%1.3g0(%g0).10$^{%d}$", y_dec, err, y_exp);
-      } else {
+      }
+      else {
          if (y_exp == ey_exp) s = Format("%1.2g0(%g).10$^{%d}$", y_dec, ey_dec, y_exp);
          else s = Format("%1.3g0(%g).10$^{%d}$", y_dec, err, y_exp);
       }
-   } else if (!((TString)Format("%1.2g", err)).Contains(".")) {
+   }
+   else if (!((TString)Format("%1.2g", err)).Contains(".")) {
       if (y_exp == ey_exp) s = Format("%1.2g(%g.0).10$^{%d}$", y_dec, ey_dec, y_exp);
       else s = Format("%1.3g(%g.0).10$^{%d}$", y_dec, err, y_exp);
-   } else if (((TString)Format("%1.2g", err)) == ((TString)Format("%1.1g", err)) && ((TString)Format("%1.2g", err)).Contains(".")) {
+   }
+   else if (((TString)Format("%1.2g", err)) == ((TString)Format("%1.1g", err)) && ((TString)Format("%1.2g", err)).Contains(".")) {
       if (y_exp == ey_exp) s = Format("%1.2g(%g0).10$^{%d}$", y_dec, ey_dec, y_exp);
       else s = Format("%1.3g(%g0).10$^{%d}$", y_dec, err, y_exp);
-   } else {
+   }
+   else {
       if (y_exp == ey_exp) s = Format("%1.2g(%g).10$^{%d}$", y_dec, ey_dec, y_exp);
       else s = Format("%1.3g(%g).10$^{%d}$", y_dec, err, y_exp);;
    }
