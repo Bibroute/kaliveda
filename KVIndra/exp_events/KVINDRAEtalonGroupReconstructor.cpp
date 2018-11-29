@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <KVSilicon.h>
 using namespace std;
 
 ClassImp(KVINDRAEtalonGroupReconstructor)
@@ -110,7 +111,7 @@ void KVINDRAEtalonGroupReconstructor::DoCalibration(KVReconstructedNucleus* PART
 
    fESiLi = fESi75 = 0;
 
-   if (!GetSi75(&PART) && !GetSiLi(&PART)) // => no etalons in particle trajectory
+   if (!GetSi75(PART) && !GetSiLi(PART)) // => no etalons in particle trajectory
       return KVINDRABackwardGroupReconstructor::DoCalibration(PART);
 
    // change fUseFullChioenergyforcalib for "coherency" particles
@@ -219,22 +220,22 @@ void KVINDRAEtalonGroupReconstructor::DoCalibration(KVReconstructedNucleus* PART
          else {
             theChio->SetEResAfterDetector(ERES);
          }
-         fEChIo = GetChIo()->GetCorrectedEnergy(this, -1., ci_transmission);
+         fEChIo = theChio->GetCorrectedEnergy(PART, -1., ci_transmission);
          if (fEChIo <= 0) {
             if (!stopped_in_chio && ERES > 0) {
-               CalculateChIoDEFromResidualEnergy(ERES);
+               CalculateChIoDEFromResidualEnergy(PART, ERES);
             }
          }
       }
       else {
          if (!stopped_in_chio && ERES > 0) {
-            CalculateChIoDEFromResidualEnergy(ERES);
+            CalculateChIoDEFromResidualEnergy(PART, ERES);
          }
       }
    }
 
 
-   SetEnergy(fECsI + TMath::Abs(fESiLi) + TMath::Abs(fESi75) + TMath::Abs(fEChIo));
+   PART->SetEnergy(fECsI + TMath::Abs(fESiLi) + TMath::Abs(fESi75) + TMath::Abs(fEChIo));
 
 }
 
