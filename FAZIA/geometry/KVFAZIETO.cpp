@@ -80,15 +80,15 @@ void KVFAZIETO::BuildFAZIA()
 
    TVector3 centre;
    // block numbering and positions
-   KVNumberList block_numbers = KVBase::GetDataSetEnv(fDataSet, "FAZIA.BlockNumbers", "0,1,2,3,4,5,6,7,8,9,10,11");
-   block_numbers.Begin();
-   KVNumberList block_positions = KVBase::GetDataSetEnv(fDataSet, "FAZIA.BlockPositions", "0,1,2,3,4,5,6,7,8,9,10,11");
-   block_positions.Begin();
+   KVString block_numbers = KVBase::GetDataSetEnv(fDataSet, "FAZIA.BlockNumbers", "0,1,2,3,4,5,6,7,8,9,10,11");
+   block_numbers.Begin(",");
+   KVString block_positions = KVBase::GetDataSetEnv(fDataSet, "FAZIA.BlockPositions", "0,1,2,3,4,5,6,7,8,9,10,11");
+   block_positions.Begin(",");
 
    for (Int_t i = 0; i < fNblocks; i += 1) {
 
-      Int_t block_number = block_numbers.Next();
-      Int_t bb = block_positions.Next();
+      Int_t block_number = block_numbers.Next().Atoi();
+      Int_t bb = block_positions.Next().Atoi();
 
       //for FAZIASYM ordering
       if (bb == 3)      centre.SetXYZ(-1 * (dx     - centre_hole / 2), 1 * (-dx    - centre_hole / 2),  distance_block_cible);
