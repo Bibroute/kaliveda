@@ -1,5 +1,30 @@
 # fichier d initialisation pour la lecture des dataset INDRAFAZIA
 #
++DataSet:	  INDRAFAZIA
+INDRAFAZIA.DataSet.Title:    INDRA-FAZIA Campaign (2018-)
+INDRAFAZIA.DataSet.RepositoryDir:	indrafazia
+INDRAFAZIA.ReconstructedEventClassName:	KVReconstructedEvent
+INDRAFAZIA.KVDataSet.DataType.Subdir.recon:  recon
+INDRAFAZIA.KVDataSet.DataType.Subdir.root:  root
+INDRAFAZIA.DataSet.ExpSetUp.ClassList: KVFAZIA KVINDRA
+INDRAFAZIA.HasCalibIdentInfos:   no
+INDRAFAZIA.ActiveIdentifications:      CSI SI-CSI CI-SI CI-CSI Si-Si Si-CsI Si CsI
+INDRAFAZIA.SI-CSI.MassID: yes
+INDRAFAZIA.SI-CSI.MassID.Validity:  Z<=8
+
++Plugin.KVMultiDetArray:    INDRAFAZIA    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
++Plugin.KVExpDB:   INDRAFAZIA    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
++Plugin.KVFAZIA:    INDRAFAZIA    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
++Plugin.KVINDRA:    INDRAFAZIA    KVINDRA    KVIndraexp_events    "KVINDRA()"
+
++Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
++Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
++Plugin.KVIDTelescope:    ^INDRAFAZIA.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
++Plugin.KVIDTelescope:    ^INDRAFAZIA.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
+
+###############################################################################
+# Beam test T18_02 2 blocks June/July 2018
+#
 +DataSet:	  INDRAFAZIA.T18_02
 INDRAFAZIA.T18_02.DataSet.Title:    Test 18_02 (June/July 2018)
 INDRAFAZIA.T18_02.DataSet.RepositoryDir:	t18_02
